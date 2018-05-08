@@ -2,9 +2,34 @@ import axios from 'axios'
 import React, { Component } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 
+// site absolute path & title
+const title = "QUICKSITE - quickly making static site with react and styled-components"
+const siteRoot = "https://localhost:3000"
+
+// render custom html document
+class Document extends Component {
+  render () {
+    const {
+      Html, Head, Body, children, renderMeta,
+    } = this.props
+
+    return (
+      <Html>
+        <Head>
+          <meta charSet="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          {renderMeta.styleTags}
+        </Head>
+        <Body>{children}</Body>
+      </Html>
+    )
+  }
+}
+
 export default {
+  siteRoot,
   getSiteData: () => ({
-    title: 'React Static',
+    title,
   }),
   getRoutes: async () => {
     const { data: posts } = await axios.get('https://jsonplaceholder.typicode.com/posts')
@@ -43,22 +68,5 @@ export default {
     meta.styleTags = sheet.getStyleElement()
     return html
   },
-  Document: class CustomHtml extends Component {
-    render () {
-      const {
-        Html, Head, Body, children, renderMeta,
-      } = this.props
-
-      return (
-        <Html>
-          <Head>
-            <meta charSet="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            {renderMeta.styleTags}
-          </Head>
-          <Body>{children}</Body>
-        </Html>
-      )
-    }
-  },
+  Document,
 }
